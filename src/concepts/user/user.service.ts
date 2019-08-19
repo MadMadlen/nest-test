@@ -4,12 +4,17 @@ import { getCustomRepository } from "typeorm";
 import { UserRepository } from './user.repository';
 import { CreateUserInterface } from './interfaces/user.createInterface';
 import { User } from  './user.entity';
+import { createUser } from './concepts/createUser';
 
 @Injectable()
 export class UsersService {
-    async createUser(userParams: CreateUserInterface): Promise<User> {
-        const usersRepository = getCustomRepository(UserRepository);
+  createUser(userParams: CreateUserInterface): Promise<User> {
+    return createUser(userParams);
+  }
 
-        return await usersRepository.create(userParams);
-    }
+  getUsers(): Promise<User[]> {
+    const usersRepository = getCustomRepository(UserRepository);
+
+    return usersRepository.findAll();
+  }
 }

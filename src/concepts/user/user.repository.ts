@@ -5,23 +5,13 @@ import { EntityRepository, Repository } from 'typeorm';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-    public findByEmail(email: string): Promise<User> {
-        return this.findOne({
-            where: {
-                email: email,
-            }
-        });
-    }
+  public createUser(userParams: CreateUserInterface): Promise<User> {
+    const createdUser = new User(userParams)
 
-    public findById(id: number): Promise<User> {
-        return this.findOne({
-            where: {
-                id: id,
-            }
-        });
-    }
+    return this.manager.save(createdUser)
+  }
 
-    public async createUser(userParams: CreateUserInterface): Promise<User> {
-        return await this.manager.create(User, userParams)
-    }
+  public findAll(): Promise<User[]> {
+    return this.find();
+  }
 }

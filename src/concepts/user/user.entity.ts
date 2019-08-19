@@ -1,25 +1,32 @@
-import { Entity, Column, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { Entity, Column, Index, PrimaryGeneratedColumn, BeforeInsert } from 'typeorm';
+import { CreateUserInterface } from './interfaces/user.createInterface';
+
 import * as crypto from 'crypto';
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    firstName: string;
+  @Column()
+  firstName: string;
 
-    @Column()
-    lastName: string
+  @Column()
+  lastName: string
 
-    @Column()
-    email: string
+  @Index({ unique: true })
+  @Column()
+  email: string
 
-    @BeforeInsert()
-    hashPassword() {
-      this.password = crypto.createHmac('sha256', this.password).digest('hex');
-    }
+  @BeforeInsert()
+  hashPassword() {
+    this.password = crypto.createHmac('sha256', this.password).digest('hex');
+  }
 
-    @Column()
-    password: string
+  @Column()
+  password: string
+
+  constructor(obj?: CreateUserInterface) {
+    Object.assign(this, obj);
+  }
 }
